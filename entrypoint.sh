@@ -1,5 +1,4 @@
 #!/bin/sh -l
-set -x
 DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
@@ -124,8 +123,6 @@ echo "[*] BoM file succesfully generated"
 
 # Cyclonedx CLI conversion
 echo "[*] Cyclonedx CLI conversion"
-#Does not upload to dtrack when output format = xml (every version available)
-cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json_v1_2
 
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
@@ -135,7 +132,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@sbom.xml")
+--form "bom=@bom.xml")
 
 echo
 
