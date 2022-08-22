@@ -1,5 +1,5 @@
 #!/bin/sh -l
-
+set -x
 DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
@@ -136,6 +136,8 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
 --form "bom=@sbom.xml")
+
+echo
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
