@@ -175,6 +175,7 @@ project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/
 echo "$project"
 if [[ $baseline_score != "" ]]; then
     echo "Previous score was: $baseline_score"
+    echo "::set-output name=baselinescore::$baseline_score"
 fi
 
 project_uuid=$(echo $project | jq ".uuid" | tr -d "\"")
