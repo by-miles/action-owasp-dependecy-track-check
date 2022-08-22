@@ -114,9 +114,12 @@ case $LANGUAGE in
         ;;
 esac
 
-if [ ! $? = 0 ]; then
-    echo "[-] Error generating BoM file: $BomResult. Stopping the action!"
-    exit 1
+PROJECT_EXISTS=$(curl -X GET --data-urlencode "name=$GITHUB_REPOSITORY" --data-urlencode "excludeInactive=true" "https://dependencytrack.bymiles.co.uk/api/v1/project" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY" | jq ".[].active")
+
+if [[ $PROJECT_EXISTS ]]; then
+    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_REF" \
+--header "X-Api-Key: $DTRACK_KEY")
+    baseline_score=$(echo $baseline_project | jq ".lastInheritedRiskScore")
 fi
 
 echo "[*] BoM file succesfully generated"
@@ -170,6 +173,9 @@ project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/
 --header "X-Api-Key: $DTRACK_KEY")
 
 echo "$project"
+if [[ $baseline_score != "" ]]; then
+    echo "Previous score was: $baseline_score"
+fi
 
 project_uuid=$(echo $project | jq ".uuid" | tr -d "\"")
 risk_score=$(echo $project | jq ".lastInheritedRiskScore")
