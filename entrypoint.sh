@@ -177,9 +177,19 @@ if [ $baseline_score != "" ]; then
     echo "Previous score was: $baseline_score"
     echo "::set-output name=baselinescore::$baseline_score"
 fi
-
+project_metrics=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
+                    --header "X-Api-Key: $DTRACK_KEY")
 project_uuid=$(echo $project | jq ".uuid" | tr -d "\"")
 risk_score=$(echo $project | jq ".lastInheritedRiskScore")
+critical=$(echo $project_metrics | jq ".critical")
+high=$(echo $project_metrics | jq ".high")
+medium=$(echo $project_metrics | jq ".medium")
+low=$(echo $project_metrics | jq ".low")
+unassigned=$(echo $project_metrics | jq ".unassigned")
 echo "Project risk score: $risk_score"
 
-echo "::set-output name=riskscore::$risk_score"
+echo "::set-output name=critical::$critical"
+echo "::set-output name=high::$high"
+echo "::set-output name=medium::$medium"
+echo "::set-output name=low::$low"
+echo "::set-output name=unassigned::$unassigned"
