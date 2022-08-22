@@ -122,7 +122,6 @@ if [ $PROJECT_EXISTS ]; then
     baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
 --header "X-Api-Key: $DTRACK_KEY")
     baseline_score=$(echo $baseline_project | jq ".inheritedRiskScore")
-    exit 1
 fi
 
 echo "[*] BoM file succesfully generated"
