@@ -176,6 +176,11 @@ echo "$project"
 if [ $baseline_score != "" ]; then
     echo "Previous score was: $baseline_score"
     echo "::set-output name=baselinescore::$baseline_score"
+    previous_critical=$(echo $baseline_project | jq ".critical")
+    previous_high=$(echo $baseline_project | jq ".high")
+    previous_medium=$(echo $baseline_project | jq ".medium")
+    previous_low=$(echo $baseline_project | jq ".low")
+    previous_unassigned=$(echo $baseline_project | jq ".unassigned")
 fi
 project_metrics=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
                     --header "X-Api-Key: $DTRACK_KEY")
@@ -193,3 +198,8 @@ echo "::set-output name=high::$high"
 echo "::set-output name=medium::$medium"
 echo "::set-output name=low::$low"
 echo "::set-output name=unassigned::$unassigned"
+echo "::set-output name=previouscritical::$previous_critical"
+echo "::set-output name=previoushigh::$previous_high"
+echo "::set-output name=previousmedium::$previous_medium"
+echo "::set-output name=previouslow::$previous_low"
+echo "::set-output name=previousunassigned::$previous_unassigned"
