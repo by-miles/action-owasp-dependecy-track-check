@@ -16,7 +16,11 @@ case $LANGUAGE in
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
         apt-get install --no-install-recommends -y nodejs
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+        export NVM_DIR="$HOME/.nvm" && (
+        git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
+        cd "$NVM_DIR"
+        git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+        ) && \. "$NVM_DIR/nvm.sh"
         nvm use
         npm install
         npm audit fix --force
