@@ -16,6 +16,8 @@ case $LANGUAGE in
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
         apt-get install --no-install-recommends -y nodejs
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+        nvm use
         npm install
         npm audit fix --force
         if [ ! $? = 0 ]; then
@@ -27,7 +29,7 @@ case $LANGUAGE in
         cyclonedx-bom --help
         BoMResult=$(cyclonedx-bom -o bom.xml)
         ;;
-    
+
     "python")
         echo "[*]  Processing Python BoM"
         apt-get install --no-install-recommends -y python3 python3-pip
@@ -40,7 +42,7 @@ case $LANGUAGE in
         path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ;;
-    
+
     "golang")
         echo "[*]  Processing Golang BoM"
         if [ ! $? = 0 ]; then
@@ -73,7 +75,7 @@ case $LANGUAGE in
         path="target/bom.xml"
         BoMResult=$(mvn compile)
         ;;
-        
+
     "dotnet")
         echo "[*]  Processing Golang BoM"
         if [ ! $? = 0 ]; then
@@ -83,11 +85,11 @@ case $LANGUAGE in
         path="bom.xml/bom.xml"
         dotnet tool install --global CycloneDX
         apt-get update
-        # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
+        # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to
         # a directory which will be recursively analyzed for packages.config files
         BoMResult=$(dotnet CycloneDX . -o bom.xml)
         ;;
-        
+
     "php")
         echo "[*]  Processing Php Composer BoM"
         if [ ! $? = 0 ]; then
@@ -106,7 +108,7 @@ case $LANGUAGE in
         "[-] Project type not supported: $LANGUAGE"
         exit 1
         ;;
-esac    
+esac
 
 if [ ! $? = 0 ]; then
     echo "[-] Error generating BoM file: $BomResult. Stopping the action!"
