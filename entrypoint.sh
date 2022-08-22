@@ -10,116 +10,118 @@ INSECURE="--insecure"
 # $GITHUB_ variables are directly accessible in the script
 cd $GITHUB_WORKSPACE
 
-case $LANGUAGE in
-    "nodejs")
-        lscommand=$(ls)
-        echo "[*] Processing NodeJS BoM"
-        apt-get install --no-install-recommends -y nodejs
-        export NVM_DIR="$HOME/.nvm" && (
-        git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
-        cd "$NVM_DIR"
-        git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
-        ) && \. "$NVM_DIR/nvm.sh"
-        nvm install
-        nvm use
-        npm install
-        npm audit fix --force
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing npm install. Stopping the action!"
-            exit 1
-        fi
-        npm install -g @cyclonedx/bom
-        path="bom.xml"
-        cyclonedx-bom --help
-        BoMResult=$(cyclonedx-bom -o bom.xml)
-        ;;
+# case $LANGUAGE in
+#     "nodejs")
+#         lscommand=$(ls)
+#         echo "[*] Processing NodeJS BoM"
+#         apt-get install --no-install-recommends -y nodejs
+#         export NVM_DIR="$HOME/.nvm" && (
+#         git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
+#         cd "$NVM_DIR"
+#         git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+#         ) && \. "$NVM_DIR/nvm.sh"
+#         nvm install
+#         nvm use
+#         npm install
+#         npm audit fix --force
+#         if [ ! $? = 0 ]; then
+#             echo "[-] Error executing npm install. Stopping the action!"
+#             exit 1
+#         fi
+#         npm install -g @cyclonedx/bom
+#         path="bom.xml"
+#         cyclonedx-bom --help
+#         BoMResult=$(cyclonedx-bom -o bom.xml)
+#         ;;
 
-    "python")
-        echo "[*]  Processing Python BoM"
-        apt-get install --no-install-recommends -y python3 python3-pip
-        freeze=$(pip freeze > requirements.txt)
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
-            exit 1
-        fi
-        pip install cyclonedx-bom
-        path="bom.xml"
-        BoMResult=$(cyclonedx-py -o bom.xml)
-        ;;
+#     "python")
+#         echo "[*]  Processing Python BoM"
+#         apt-get install --no-install-recommends -y python3 python3-pip
+#         freeze=$(pip freeze > requirements.txt)
+#         if [ ! $? = 0 ]; then
+#             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
+#             exit 1
+#         fi
+#         pip install cyclonedx-bom
+#         path="bom.xml"
+#         BoMResult=$(cyclonedx-py -o bom.xml)
+#         ;;
 
-    "golang")
-        echo "[*]  Processing Golang BoM"
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing go build. Stopping the action!"
-            exit 1
-        fi
-        path="bom.xml"
-        BoMResult=$(cyclonedx-go -o bom.xml)
-        ;;
+#     "golang")
+#         echo "[*]  Processing Golang BoM"
+#         if [ ! $? = 0 ]; then
+#             echo "[-] Error executing go build. Stopping the action!"
+#             exit 1
+#         fi
+#         path="bom.xml"
+#         BoMResult=$(cyclonedx-go -o bom.xml)
+#         ;;
 
-    "ruby")
-        echo "[*]  Processing Ruby BoM"
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing Ruby build. Stopping the action!"
-            exit 1
-        fi
-        apt-get install --no-install-recommends -y build-essential ruby-dev
-        gem install cyclonedx-ruby
-        path="bom.xml"
-        BoMResult=$(cyclonedx-ruby -p ./ -o bom.xml)
-        ;;
+#     "ruby")
+#         echo "[*]  Processing Ruby BoM"
+#         if [ ! $? = 0 ]; then
+#             echo "[-] Error executing Ruby build. Stopping the action!"
+#             exit 1
+#         fi
+#         apt-get install --no-install-recommends -y build-essential ruby-dev
+#         gem install cyclonedx-ruby
+#         path="bom.xml"
+#         BoMResult=$(cyclonedx-ruby -p ./ -o bom.xml)
+#         ;;
 
-    "java")
-        echo "[*]  Processing Java BoM"
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing Java build. Stopping the action!"
-            exit 1
-        fi
-        apt-get install --no-install-recommends -y build-essential default-jdk maven
-        path="target/bom.xml"
-        BoMResult=$(mvn compile)
-        ;;
+#     "java")
+#         echo "[*]  Processing Java BoM"
+#         if [ ! $? = 0 ]; then
+#             echo "[-] Error executing Java build. Stopping the action!"
+#             exit 1
+#         fi
+#         apt-get install --no-install-recommends -y build-essential default-jdk maven
+#         path="target/bom.xml"
+#         BoMResult=$(mvn compile)
+#         ;;
 
-    "dotnet")
-        echo "[*]  Processing Golang BoM"
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing NuGet (Dotnet) build. Stopping the action!"
-            exit 1
-        fi
-        path="bom.xml/bom.xml"
-        dotnet tool install --global CycloneDX
-        apt-get update
-        # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to
-        # a directory which will be recursively analyzed for packages.config files
-        BoMResult=$(dotnet CycloneDX . -o bom.xml)
-        ;;
+#     "dotnet")
+#         echo "[*]  Processing Golang BoM"
+#         if [ ! $? = 0 ]; then
+#             echo "[-] Error executing NuGet (Dotnet) build. Stopping the action!"
+#             exit 1
+#         fi
+#         path="bom.xml/bom.xml"
+#         dotnet tool install --global CycloneDX
+#         apt-get update
+#         # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to
+#         # a directory which will be recursively analyzed for packages.config files
+#         BoMResult=$(dotnet CycloneDX . -o bom.xml)
+#         ;;
 
-    "php")
-        echo "[*]  Processing Php Composer BoM"
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing Php build. Stopping the action!"
-            exit 1
-        fi
-        apt-get install --no-install-recommends -y build-essential php php-xml php-mbstring
-        curl -sS "https://getcomposer.org/installer" -o composer-setup.php
-        php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer
-        composer require --dev cyclonedx/cyclonedx-php-composer
-        path="bom.xml"
-        BoMResult=$(composer make-bom --spec-version="1.2")
-        ;;
+#     "php")
+#         echo "[*]  Processing Php Composer BoM"
+#         if [ ! $? = 0 ]; then
+#             echo "[-] Error executing Php build. Stopping the action!"
+#             exit 1
+#         fi
+#         apt-get install --no-install-recommends -y build-essential php php-xml php-mbstring
+#         curl -sS "https://getcomposer.org/installer" -o composer-setup.php
+#         php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer
+#         composer require --dev cyclonedx/cyclonedx-php-composer
+#         path="bom.xml"
+#         BoMResult=$(composer make-bom --spec-version="1.2")
+#         ;;
 
-    *)
-        "[-] Project type not supported: $LANGUAGE"
-        exit 1
-        ;;
-esac
-
-PROJECT_EXISTS=$(curl -X GET --data-urlencode "name=$GITHUB_REPOSITORY" --data-urlencode "excludeInactive=true" "https://dependencytrack.bymiles.co.uk/api/v1/project" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY" | jq ".[].active")
+#     *)
+#         "[-] Project type not supported: $LANGUAGE"
+#         exit 1
+#         ;;
+# esac
+PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY" "https://dependencytrack.bymiles.co.uk/api/v1/project?excludeInactive=true" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
+PROJECT_EXISTS=$(echo $PROJECT | jq ".[].active")
+PROJECT_UUID=$(echo $PROJECT | jq -r ".[].uuid")
 
 if [ $PROJECT_EXISTS ]; then
-    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_REF" \
+    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
 --header "X-Api-Key: $DTRACK_KEY")
-    baseline_score=$(echo $baseline_project | jq ".lastInheritedRiskScore")
+    baseline_score=$(echo $baseline_project | jq ".inheritedRiskScore")
+    exit 1
 fi
 
 echo "[*] BoM file succesfully generated"
@@ -127,17 +129,17 @@ echo "[*] BoM file succesfully generated"
 # Cyclonedx CLI conversion
 echo "[*] Cyclonedx CLI conversion"
 
-# UPLOAD BoM to Dependency track server
-echo "[*] Uploading BoM file to Dependency Track server"
-upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/api/v1/bom \
---header "X-Api-Key: $DTRACK_KEY" \
---header "Content-Type: multipart/form-data" \
---form "autoCreate=true" \
---form "projectName=$GITHUB_REPOSITORY" \
---form "projectVersion=$GITHUB_REF" \
---form "bom=@bom.xml")
+# # UPLOAD BoM to Dependency track server
+# echo "[*] Uploading BoM file to Dependency Track server"
+# upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/api/v1/bom \
+# --header "X-Api-Key: $DTRACK_KEY" \
+# --header "Content-Type: multipart/form-data" \
+# --form "autoCreate=true" \
+# --form "projectName=$GITHUB_REPOSITORY" \
+# --form "projectVersion=$GITHUB_REF" \
+# --form "bom=@bom.xml")
 
-echo
+# echo
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
