@@ -198,11 +198,9 @@ echo "[*] Retrieving project information"
 project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_REF" \
 --header "X-Api-Key: $DTRACK_KEY")
 
-echo "Baseline score is $baseline_score"
-
 if [[ -n "$baseline_score" ]]; then
     echo "Previous score was: $baseline_score"
-    echo $baseline_score >> $GITHUB_ENV
+    echo "::set-output name=baselinescore::$baseline_score"
     previous_critical=$(echo $baseline_project | jq ".critical")
     previous_high=$(echo $baseline_project | jq ".high")
     previous_medium=$(echo $baseline_project | jq ".medium")
@@ -211,7 +209,6 @@ if [[ -n "$baseline_score" ]]; then
 fi
 project_metrics=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
                     --header "X-Api-Key: $DTRACK_KEY")
-echo "Project metrics are: $project_metrics"
 project_uuid=$(echo $project | jq ".uuid" | tr -d "\"")
 risk_score=$(echo $project | jq ".lastInheritedRiskScore")
 critical=$(echo $project_metrics | jq ".critical")
@@ -221,13 +218,13 @@ low=$(echo $project_metrics | jq ".low")
 unassigned=$(echo $project_metrics | jq ".unassigned")
 echo "Project risk score: $risk_score"
 
-echo $critical >> $GITHUB_ENV
-echo $high >> $GITHUB_ENV
-echo $medium >> $GITHUB_ENV
-echo $low >> $GITHUB_ENV
-echo $unassigned >> $GITHUB_ENV
-echo $previous_critical >> $GITHUB_ENV
-echo $previous_high >> $GITHUB_ENV
-echo $previous_medium >> $GITHUB_ENV
-echo $previous_low >> $GITHUB_ENV
-echo $previous_unassigned >> $GITHUB_ENV
+echo "::set-output name=critical::$critical"
+echo "::set-output name=high::$high"
+echo "::set-output name=medium::$medium"
+echo "::set-output name=low::$low"
+echo "::set-output name=unassigned::$unassigned"
+echo "::set-output name=previouscritical::$previous_critical"
+echo "::set-output name=previoushigh::$previous_high"
+echo "::set-output name=previousmedium::$previous_medium"
+echo "::set-output name=previouslow::$previous_low"
+echo "::set-output name=previousunassigned::$previous_unassigned"
