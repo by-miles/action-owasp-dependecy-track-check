@@ -20,7 +20,7 @@ PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid" 2>/dev/null)
 
 if [[ $DELETE == "true" ]]; then
     curl -X DELETE "$DTRACK_URL/api/v1/project/$PROJECT_UUID" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY"
-    exit 1
+    exit 0
 fi
 
 case $LANGUAGE in
