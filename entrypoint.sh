@@ -117,7 +117,7 @@ PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY" "https://dep
 PROJECT_EXISTS=$(echo $PROJECT | jq ".[].active")
 PROJECT_UUID=$(echo $PROJECT | jq -r ".[].uuid")
 
-if [ $PROJECT_EXISTS ]; then
+if [[ -z $PROJECT_EXISTS ]]; then
     baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
 --header "X-Api-Key: $DTRACK_KEY")
     baseline_score=$(echo $baseline_project | jq ".inheritedRiskScore")
@@ -173,7 +173,7 @@ project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/
 --header "X-Api-Key: $DTRACK_KEY")
 
 echo "$project"
-if [ $baseline_score != "" ]; then
+if [[ $baseline_score != "" ]]; then
     echo "Previous score was: $baseline_score"
     echo "::set-output name=baselinescore::$baseline_score"
     previous_critical=$(echo $baseline_project | jq ".critical")
