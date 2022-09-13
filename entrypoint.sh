@@ -19,8 +19,13 @@ PROJECT_EXISTS=$(echo $PROJECT | jq ".active" 2>/dev/null)
 PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid" 2>/dev/null)
 
 if [[ $DELETE == "true" ]]; then
-    curl -X DELETE "$DTRACK_URL/api/v1/project/$PROJECT_UUID" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY"
-    exit 0
+    DELETE_CODE=$(curl -X DELETE --head -w "%{http_code}" "$DTRACK_URL/api/v1/project/$PROJECT_UUID" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
+    echo "DELETE_CODE is $DELETE_CODE"
+    if [[ $DELETE_CODE == "204" ]]; then
+        exit 0
+    else
+        exit 1
+    fi
 fi
 
 case $LANGUAGE in
