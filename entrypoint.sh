@@ -172,7 +172,7 @@ echo "[*] Retrieving project information"
 project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_REF" \
 --header "X-Api-Key: $DTRACK_KEY")
 
-echo $baseline_score
+echo "Baseline score is $baseline_score"
 
 if [[ -n "$baseline_score" ]]; then
     echo "Previous score was: $baseline_score"
@@ -185,7 +185,7 @@ if [[ -n "$baseline_score" ]]; then
 fi
 project_metrics=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
                     --header "X-Api-Key: $DTRACK_KEY")
-echo $project_metrics
+echo "Project metrics are: $project_metrics"
 project_uuid=$(echo $project | jq ".uuid" | tr -d "\"")
 risk_score=$(echo $project | jq ".lastInheritedRiskScore")
 critical=$(echo $project_metrics | jq ".critical")
