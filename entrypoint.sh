@@ -11,6 +11,17 @@ INSECURE="--insecure"
 # $GITHUB_ variables are directly accessible in the script
 cd $GITHUB_WORKSPACE
 
+# Run check for delete variable first so that install doesn't need to be run
+PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
+                         --data-urlencode "version=$GITHUB_REF" \
+                         "$DTRACK_URL/api/v1/project/lookup" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
+PROJECT_EXISTS=$(echo $PROJECT | jq ".active" 2>/dev/null)
+PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid" 2>/dev/null)
+
+if [[ $DELETE == "true" ]]; then
+    curl -X DELETE "$DTRACK_URL.bymiles.co.uk/api/v1/project/$PROJECT_UUID" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY"
+fi
+
 case $LANGUAGE in
     "nodejs")
         lscommand=$(ls)
@@ -126,17 +137,6 @@ MASTER_PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
                          "$DTRACK_URL/api/v1/project/lookup" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
 MASTER_PROJECT_EXISTS=$(echo $MASTER_PROJECT | jq ".active" 2>/dev/null)
 MASTER_PROJECT_UUID=$(echo $MASTER_PROJECT | jq -r ".uuid" 2>/dev/null)
-
-
-PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
-                         --data-urlencode "version=$GITHUB_REF" \
-                         "$DTRACK_URL/api/v1/project/lookup" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
-PROJECT_EXISTS=$(echo $PROJECT | jq ".active" 2>/dev/null)
-PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid" 2>/dev/null)
-
-if [[ $DELETE == "true" ]]; then
-    curl -X DELETE "$DTRACK_URL.bymiles.co.uk/api/v1/project/$PROJECT_UUID" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY"
-fi
 
 
 if [[ -n "$PROJECT_EXISTS" ]]; then
