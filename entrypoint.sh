@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
