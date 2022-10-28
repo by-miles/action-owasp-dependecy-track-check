@@ -46,7 +46,7 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
-        npm install -g @cyclonedx/bom
+        npm install -g @cyclonedx/bom@3.10.6
         path="bom.xml"
         cyclonedx-bom --help
         BoMResult=$(cyclonedx-bom -o bom.xml)
