@@ -24,6 +24,9 @@ if [[ $DELETE == "true" ]]; then
     if [[ $DELETE_CODE == "204" ]]; then
         exit 0
     else
+        echo $PROJECT
+        echo $PROJECT_EXISTS
+        echo $PROJECT_UUID
         exit 1
     fi
 fi
