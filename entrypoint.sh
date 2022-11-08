@@ -210,7 +210,7 @@ project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/
 
 if [[ -n "$baseline_score" ]]; then
     echo "Previous score was: $baseline_score"
-    echo "::set-output name=baselinescore::$baseline_score"
+    echo "baselinescore=$baseline_score" >> $GITHUB_OUTPUT
     previous_critical=$(echo $baseline_project | jq ".critical")
     previous_high=$(echo $baseline_project | jq ".high")
     previous_medium=$(echo $baseline_project | jq ".medium")
@@ -228,13 +228,14 @@ low=$(echo $project_metrics | jq ".low")
 unassigned=$(echo $project_metrics | jq ".unassigned")
 echo "Project risk score: $risk_score"
 
-echo "::set-output name=critical::$critical"
-echo "::set-output name=high::$high"
-echo "::set-output name=medium::$medium"
-echo "::set-output name=low::$low"
-echo "::set-output name=unassigned::$unassigned"
-echo "::set-output name=previouscritical::$previous_critical"
-echo "::set-output name=previoushigh::$previous_high"
-echo "::set-output name=previousmedium::$previous_medium"
-echo "::set-output name=previouslow::$previous_low"
-echo "::set-output name=previousunassigned::$previous_unassigned"
+echo "riskscore=$risk_score" >> $GITHUB_OUTPUT
+echo "critical=$critical" >> $GITHUB_OUTPUT
+echo "high=$high" >> $GITHUB_OUTPUT
+echo "medium=$medium" >> $GITHUB_OUTPUT
+echo "low=$low" >> $GITHUB_OUTPUT
+echo "unassigned=$unassigned" >> $GITHUB_OUTPUT
+echo "previouscritical=$previous_critical" >> $GITHUB_OUTPUT
+echo "previoushigh=$previous_high" >> $GITHUB_OUTPUT
+echo "previousmedium=$previous_medium" >> $GITHUB_OUTPUT
+echo "previouslow=$previous_low" >> $GITHUB_OUTPUT
+echo "previousunassigned=$previous_unassigned" >> $GITHUB_OUTPUT
