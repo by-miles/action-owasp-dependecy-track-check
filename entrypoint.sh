@@ -16,7 +16,7 @@ env
 
 # Run check for delete variable first so that install doesn't need to be run
 PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
-                         --data-urlencode "version=$GITHUB_REF" \
+                         --data-urlencode "version=$GITHUB_HEAD_REF" \
                          "$DTRACK_URL/api/v1/project/lookup" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
 PROJECT_EXISTS=$(echo $PROJECT | jq ".active" 2>/dev/null)
 PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid" 2>/dev/null)
@@ -29,7 +29,7 @@ if [[ $DELETE == "true" ]]; then
     else
         echo $PROJECT
         echo $PROJECT_EXISTS
-        echo $GITHUB_REF
+        echo $GITHUB_HEAD_REF
         echo $PROJECT_UUID
         exit 1
     fi
@@ -178,7 +178,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --header "Content-Type: multipart/form-data" \
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
---form "projectVersion=$GITHUB_REF" \
+--form "projectVersion=$GITHUB_HEAD_REF" \
 --form "bom=@bom.xml")
 
 
@@ -212,7 +212,7 @@ echo "[*] OWASP Dependency Track processing completed"
 sleep 5
 
 echo "[*] Retrieving project information"
-project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_REF" \
+project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_HEAD_REF" \
 --header "X-Api-Key: $DTRACK_KEY")
 
 if [[ -n "$baseline_score" ]]; then
