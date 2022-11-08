@@ -12,6 +12,8 @@ INSECURE="--insecure"
 # $GITHUB_ variables are directly accessible in the script
 cd $GITHUB_WORKSPACE
 
+env
+
 # Run check for delete variable first so that install doesn't need to be run
 PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
                          --data-urlencode "version=$GITHUB_REF" \
