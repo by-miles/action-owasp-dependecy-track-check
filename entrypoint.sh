@@ -254,4 +254,4 @@ echo "previoushigh=$previous_high" >> $GITHUB_OUTPUT
 echo "previousmedium=$previous_medium" >> $GITHUB_OUTPUT
 echo "previouslow=$previous_low" >> $GITHUB_OUTPUT
 echo "previousunassigned=$previous_unassigned" >> $GITHUB_OUTPUT
-echo "project_url=$DTRACK_URL/projects/$PROJECT_UUID"
+echo "project_url=$DTRACK_URL/projects/$PROJECT_UUID" >> $GITHUB_OUTPUT
