@@ -19,7 +19,7 @@ PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
 PROJECT_EXISTS=$(echo $PROJECT | jq ".active" 2>/dev/null)
 if [[ -n "$PROJECT_EXISTS" ]]; then
     PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid" 2>/dev/null)
-else;
+else
     PROJECT_UUID=$(curl \
         -d "{  \"name\": \"$GITHUB_REPOSITORY\",  \"version\": \"$GITHUB_HEAD_REF\"}" \
         -X PUT "$DTRACK_URL/api/v1/project" \
