@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+# set -x
 DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
@@ -160,15 +160,15 @@ MASTER_PROJECT_EXISTS=$(echo $MASTER_PROJECT | jq ".active" 2>/dev/null)
 MASTER_PROJECT_UUID=$(echo $MASTER_PROJECT | jq -r ".uuid" 2>/dev/null)
 
 
-if [[ -n "$PROJECT_EXISTS" ]]; then
-    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
---header "X-Api-Key: $DTRACK_KEY")
-    baseline_score=$(echo $baseline_project | jq ".inheritedRiskScore")
-elif [[ -n "$MAIN_PROJECT_EXISTS" ]]; then
+if [[ -n "$MAIN_PROJECT_EXISTS" ]]; then
     baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$MAIN_PROJECT_UUID/current" \
 --header "X-Api-Key: $DTRACK_KEY")
-else
+    baseline_score=$(echo $baseline_project | jq ".inheritedRiskScore")
+elif [[ -n "$MASTER_PROJECT_EXISTS" ]]; then
     baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$MASTER_PROJECT_UUID/current" \
+--header "X-Api-Key: $DTRACK_KEY")
+else
+    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
 --header "X-Api-Key: $DTRACK_KEY")
 fi
 
