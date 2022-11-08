@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
@@ -26,6 +27,7 @@ if [[ $DELETE == "true" ]]; then
     else
         echo $PROJECT
         echo $PROJECT_EXISTS
+        echo $GITHUB_REF
         echo $PROJECT_UUID
         exit 1
     fi
