@@ -35,3 +35,5 @@ runs:
     - ${{ inputs.key }}
     - ${{ inputs.language }}
     - ${{ inputs.delete }}
+    - ${{ inputs.fail_on_critical }}
+    - ${{ inputs.fail_on_high }}
