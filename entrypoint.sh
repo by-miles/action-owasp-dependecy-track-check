@@ -4,6 +4,8 @@ DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
 DELETE=$4
+FAIL_ON_CRITICAL=$5
+FAIL_ON_HIGH=$6
 
 INSECURE="--insecure"
 #VERBOSE="--verbose"
@@ -255,3 +257,11 @@ echo "previousmedium=$previous_medium" >> $GITHUB_OUTPUT
 echo "previouslow=$previous_low" >> $GITHUB_OUTPUT
 echo "previousunassigned=$previous_unassigned" >> $GITHUB_OUTPUT
 echo "project_url=$DTRACK_URL/projects/$PROJECT_UUID" >> $GITHUB_OUTPUT
+
+if [[ -n $critical ]] && [[ $FAIL_ON_CRITICAL == "true" ]];
+    exit 1
+fi
+
+if [[ -n $high ]] && [[ $FAIL_ON_HIGH == "true" ]];
+    exit 1
+fi
