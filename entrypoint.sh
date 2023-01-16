@@ -225,6 +225,10 @@ echo "[*] Retrieving project information"
 project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_HEAD_REF" \
 --header "X-Api-Key: $DTRACK_KEY")
 
+echo "-----PROJECT-------"
+echo $project
+echo "-------------------------"
+
 if [[ -n "$baseline_score" ]]; then
     echo "Previous score was: $baseline_score"
     echo "baselinescore=$baseline_score" >> $GITHUB_OUTPUT
@@ -246,10 +250,6 @@ unassigned=$(echo $project_metrics | jq ".unassigned")
 
 echo "-----PROJECT METRICS-----"
 echo $project_metrics
-echo "-------------------------"
-
-echo "-----PROJECT-------"
-echo $project
 echo "-------------------------"
 
 echo "riskscore=$risk_score" >> $GITHUB_OUTPUT
