@@ -243,7 +243,14 @@ high=$(echo $project_metrics | jq ".high")
 medium=$(echo $project_metrics | jq ".medium")
 low=$(echo $project_metrics | jq ".low")
 unassigned=$(echo $project_metrics | jq ".unassigned")
-echo "Project risk score: $risk_score"
+
+echo "-----PROJECT METRICS-----"
+echo $project_metrics
+echo "-------------------------"
+
+echo "-----PROJECT-------"
+echo $project
+echo "-------------------------"
 
 echo "riskscore=$risk_score" >> $GITHUB_OUTPUT
 echo "critical=$critical" >> $GITHUB_OUTPUT
