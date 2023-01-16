@@ -258,16 +258,14 @@ echo "previouslow=$previous_low" >> $GITHUB_OUTPUT
 echo "previousunassigned=$previous_unassigned" >> $GITHUB_OUTPUT
 echo "project_url=$DTRACK_URL/projects/$PROJECT_UUID" >> $GITHUB_OUTPUT
 
-
-
-echo $FAIL_ON_CRITICAL
-echo $FAIL_ON_HIGH
 if [[ $critical -gt 0 ]] && [[ $FAIL_ON_CRITICAL == "true" ]];
 then
+    echo 'Failing due to presence of criticals'
     exit 1
 fi
 
 if [[ $high -gt 0 ]] && [[ $FAIL_ON_HIGH == "true" ]];
 then
+    echo 'Failing due to presence of highs'
     exit 1
 fi
