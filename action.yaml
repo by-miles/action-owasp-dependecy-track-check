@@ -22,9 +22,33 @@ inputs:
     description: 'Delete project'
     required: false
     default: 'false'
+  delete:
+    description: 'Delete project'
+    required: false
+    default: 'false'
+  fail_on_critical:
+    description: 'Fail on criticals'
+    required: false
+    default: 'false'
+  fail_on_high:
+    description: 'Fail on highs'
+    required: false
+    default: 'false'
 
 outputs:
   riskscore:
+    description: 'String with the number of vulnerabilities found'
+  critical:
+    description: 'String with the number of vulnerabilities found'
+  high:
+    description: 'String with the number of vulnerabilities found'
+  medium:
+    description: 'String with the number of vulnerabilities found'
+  low:
+    description: 'String with the number of vulnerabilities found'
+  fail_on_critical:
+    description: 'String with the number of vulnerabilities found'
+  fail_on_high:
     description: 'String with the number of vulnerabilities found'
 
 runs:
