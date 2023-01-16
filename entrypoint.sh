@@ -257,7 +257,8 @@ echo "previousmedium=$previous_medium" >> $GITHUB_OUTPUT
 echo "previouslow=$previous_low" >> $GITHUB_OUTPUT
 echo "previousunassigned=$previous_unassigned" >> $GITHUB_OUTPUT
 echo "project_url=$DTRACK_URL/projects/$PROJECT_UUID" >> $GITHUB_OUTPUT
-
+echo "fail_on_critical=$FAIL_ON_CRITICAL" >> $GITHUB_OUTPUT
+echo "fail_on_high=$FAIL_ON_HIGH" >> $GITHUB_OUTPUT
 if [[ $critical -gt 0 ]] && [[ $FAIL_ON_CRITICAL == "true" ]];
 then
     echo 'Failing due to presence of criticals'
