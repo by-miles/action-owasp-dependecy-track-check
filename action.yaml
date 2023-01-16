@@ -22,10 +22,6 @@ inputs:
     description: 'Delete project'
     required: false
     default: 'false'
-  delete:
-    description: 'Delete project'
-    required: false
-    default: 'false'
   fail_on_critical:
     description: 'Fail on criticals'
     required: false
