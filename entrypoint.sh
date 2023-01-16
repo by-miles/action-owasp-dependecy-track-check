@@ -267,7 +267,7 @@ then
     exit 1
 fi
 
-if [[ $high -gt ]] && [[ $FAIL_ON_HIGH == "true" ]];
+if [[ $high -gt 0 ]] && [[ $FAIL_ON_HIGH == "true" ]];
 then
     exit 1
 fi
