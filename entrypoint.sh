@@ -73,7 +73,7 @@ case $LANGUAGE in
         npm install -g @cyclonedx/cyclonedx-npm
         path="bom.xml"
         cyclonedx-npm --help
-        BoMResult=$(cyclonedx-npm --output-format bom.xml)
+        BoMResult=$(cyclonedx-npm --output-format XML --output-file bom.xml)
         ;;
 
     "python")
