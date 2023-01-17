@@ -55,8 +55,15 @@ case $LANGUAGE in
         cd "$NVM_DIR"
         git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
         ) && \. "$NVM_DIR/nvm.sh"
-        nvm install
-        nvm use
+        if [[ -f ".nvmrc" ]];
+        then
+            nvm install
+            nvm use
+        else
+            nvm install 16.14.2
+            nvm alias default 16.14.2
+            nvm use default
+        fi
         npm install
         npm audit fix --force
         if [ ! $? = 0 ]; then
