@@ -26,6 +26,7 @@ else
         -d "{  \"name\": \"$GITHUB_REPOSITORY\",  \"version\": \"$GITHUB_HEAD_REF\"}" \
         -X PUT "$DTRACK_URL/api/v1/project" \
         -H  "accept: application/json" \
+        -H  "Content-Type: application/json" \
         -H  "X-Api-Key: $DTRACK_KEY" | jq -r ".uuid"
     )
 fi
@@ -155,31 +156,8 @@ case $LANGUAGE in
         exit 1
         ;;
 esac
-MAIN_PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
-                         --data-urlencode "version=refs/heads/main" \
-                         "$DTRACK_URL/api/v1/project/lookup" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
-MAIN_PROJECT_EXISTS=$(echo $MAIN_PROJECT | jq ".active" 2>/dev/null)
-MAIN_PROJECT_UUID=$(echo $MAIN_PROJECT | jq -r ".uuid" 2>/dev/null)
-
-
-MASTER_PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
-                         --data-urlencode "version=refs/heads/master" \
-                         "$DTRACK_URL/api/v1/project/lookup" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
-MASTER_PROJECT_EXISTS=$(echo $MASTER_PROJECT | jq ".active" 2>/dev/null)
-MASTER_PROJECT_UUID=$(echo $MASTER_PROJECT | jq -r ".uuid" 2>/dev/null)
-
-
-if [[ -n "$MAIN_PROJECT_EXISTS" ]]; then
-    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$MAIN_PROJECT_UUID/current" \
---header "X-Api-Key: $DTRACK_KEY")
-    baseline_score=$(echo $baseline_project | jq ".inheritedRiskScore")
-elif [[ -n "$MASTER_PROJECT_EXISTS" ]]; then
-    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$MASTER_PROJECT_UUID/current" \
---header "X-Api-Key: $DTRACK_KEY")
-else
-    baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
---header "X-Api-Key: $DTRACK_KEY")
-fi
+baseline_project=$(curl  $INSECURE $VERBOSE -s --location --request GET -G "$DTRACK_URL/api/v1/metrics/project/$PROJECT_UUID/current" \
+    --header "X-Api-Key: $DTRACK_KEY")
 
 baseline_score=$(echo $baseline_project | jq ".inheritedRiskScore" 2>/dev/nulll)
 
