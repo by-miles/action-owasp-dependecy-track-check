@@ -18,15 +18,15 @@ cd $GITHUB_WORKSPACE
 PROJECT=$(curl -X GET -G --data-urlencode "name=$GITHUB_REPOSITORY"  \
                          --data-urlencode "version=$GITHUB_HEAD_REF" \
                          "$DTRACK_URL/api/v1/project/lookup" -H  "accept: application/json" -H  "X-Api-Key: $DTRACK_KEY")
-PROJECT_EXISTS=$(echo $PROJECT | jq ".active" 2>/dev/null)
+PROJECT_EXISTS=$(echo $PROJECT | jq ".active")
 if [[ -n "$PROJECT_EXISTS" ]]; then
-    PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid" 2>/dev/null)
+    PROJECT_UUID=$(echo $PROJECT | jq -r ".uuid")
 else
     PROJECT_UUID=$(curl \
         -d "{  \"name\": \"$GITHUB_REPOSITORY\",  \"version\": \"$GITHUB_HEAD_REF\"}" \
         -X PUT "$DTRACK_URL/api/v1/project" \
         -H  "accept: application/json" \
-        -H  "X-Api-Key: $DTRACK_KEY" | jq -r ".uuid" 2>/dev/null
+        -H  "X-Api-Key: $DTRACK_KEY" | jq -r ".uuid"
     )
 fi
 
