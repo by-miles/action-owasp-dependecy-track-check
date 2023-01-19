@@ -73,7 +73,7 @@ case $LANGUAGE in
         npm install -g @cyclonedx/cyclonedx-npm
         path="bom.xml"
         cyclonedx-npm --help
-        BoMResult=$(cyclonedx-npm --output-format XML --short-PURLs --output-file bom.xml)
+        BoMResult=$(cyclonedx-npm --output-format XML --ignore-npm-errors --short-PURLs --output-file bom.xml)
         ;;
 
     "python")
@@ -226,7 +226,7 @@ done
 echo "[*] OWASP Dependency Track processing completed"
 
 # wait to make sure the score is available, some errors found during tests w/o this wait
-sleep 60
+sleep 300
 
 echo "[*] Retrieving project information"
 project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_HEAD_REF" \
