@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -x
+set -x
 DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
@@ -226,7 +226,7 @@ done
 echo "[*] OWASP Dependency Track processing completed"
 
 # wait to make sure the score is available, some errors found during tests w/o this wait
-sleep 300
+sleep 150
 
 echo "[*] Retrieving project information"
 project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_HEAD_REF" \
