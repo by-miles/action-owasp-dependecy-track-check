@@ -56,7 +56,8 @@ case $LANGUAGE in
         cd "$NVM_DIR"
         git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
         ) && \. "$NVM_DIR/nvm.sh"
-        if [[ -f ".nvmrc" && ! grep -q 12 ".nvmrc" ]];
+        grep -q 12 ".nvmrc"
+        if [[ $? != 0 && -f ".nvmrc" ]];
         then
             nvm install
             nvm use
