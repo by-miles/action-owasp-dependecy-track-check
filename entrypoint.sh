@@ -59,9 +59,11 @@ case $LANGUAGE in
         grep -q 12 ".nvmrc"
         if [[ $? != 0 && -f ".nvmrc" ]];
         then
+            echo "Using .nvmrc file"
             nvm install
             nvm use
         else
+            echo "Installing 16.14.2"
             nvm install 16.14.2
             nvm alias default 16.14.2
             nvm use default
