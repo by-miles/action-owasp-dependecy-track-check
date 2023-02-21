@@ -69,7 +69,7 @@ case $LANGUAGE in
             nvm use default
         fi
         npm install
-        npm audit fix --force
+        npm audit fix --force --production
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
