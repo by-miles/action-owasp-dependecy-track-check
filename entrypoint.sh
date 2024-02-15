@@ -198,7 +198,7 @@ while [ $processing = true ]; do
     sleep 5
     processing=$(curl  $INSECURE $VERBOSE -s --location --request GET $DTRACK_URL/api/v1/bom/token/$token \
 --header "X-Api-Key: $DTRACK_KEY" | jq '.processing')
-    if [ $((++c)) -eq 50 ]; then
+    if [ $((++c)) -eq 100 ]; then
         echo "[-]  Timeout while waiting for processing result. Please check the OWASP Dependency Track status."
         exit 1
     fi
