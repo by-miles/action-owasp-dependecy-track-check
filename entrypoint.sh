@@ -62,6 +62,7 @@ case $LANGUAGE in
             echo "Using .nvmrc file"
             nvm install
             nvm use
+            nvm install-latest-npm
         else
             echo "Installing 16.14.2"
             nvm install 16.14.2
